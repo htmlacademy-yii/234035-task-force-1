@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Evgeniy Kobrikov](https://up.htmlacademy.ru/yii/1/user/234035).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Сергеев](https://htmlacademy.ru/profile/asamat).
 
 ---
 
