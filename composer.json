@@ -1,0 +1,17 @@
+{
+    "name": "kobrikov/234035-task-force-1",
+    "description": "HTML Academy project",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Evgeniy Kobrikov",
+            "email": "kobrikov@yandex.ru"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    }
+}

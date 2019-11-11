@@ -1,6 +1,8 @@
 <?php
 
-require_once 'Task.php';
+use TaskForce\Task\Task;
+
+require_once 'vendor/autoload.php';
 
 $customer['id'] = 1;
 
