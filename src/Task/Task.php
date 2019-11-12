@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\Task;
+
 class Task
 {
     public const STATUS_NEW = 'new status'; //новое
