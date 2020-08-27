@@ -7,37 +7,38 @@ USE taskforce;
 SET FOREIGN_KEY_CHECKS=0;
 
 CREATE TABLE user (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(128),
-  email VARCHAR(64),
-  password VARCHAR(64),
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  registration_date DATETIME NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  email VARCHAR(64) NOT NULL,
+  password VARCHAR(64) NOT NULL,
   address VARCHAR(64),
-  date DATETIME,
+  birthday_date DATE,
   info VARCHAR(128),
   avatar VARCHAR(128),
-  rating FLOAT,
+  rating DECIMAL(4,2),
   phone VARCHAR(64),
   skype VARCHAR(64),
   messenger VARCHAR(64),
-  city_id INT,
-  category_id INT,
+  city_id INT UNSIGNED,
+  category_id INT UNSIGNED,
   FOREIGN KEY (city_id) REFERENCES city(id),
   FOREIGN KEY (category_id) REFERENCES category(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE task (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(128),
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(128) NOT NULL,
   description VARCHAR(128),
-  budget FLOAT,
-  reg_date DATETIME,
-  exe_date DATETIME,
+  budget DECIMAL(8,2) NOT NULL,
+  registration_date DATETIME NOT NULL,
+  execution_date DATETIME,
   finish_date DATETIME,
-  city_id INT,
-  category_id INT,
-  executor_id INT,
-  customer_id INT,
-  status_id INT,
+  city_id INT UNSIGNED,
+  category_id INT UNSIGNED,
+  executor_id INT UNSIGNED,
+  customer_id INT UNSIGNED,
+  status_id INT UNSIGNED,
   FOREIGN KEY (city_id) REFERENCES city(id),
   FOREIGN KEY (category_id) REFERENCES category(id),
   FOREIGN KEY (executor_id) REFERENCES user(id),
@@ -46,61 +47,61 @@ CREATE TABLE task (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE city (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(64)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE status (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(64)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE category (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(64)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE file (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   path VARCHAR(128),
-  task_id INT,
+  task_id INT UNSIGNED,
   FOREIGN KEY (task_id) REFERENCES task(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE feedback (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  reg_date DATETIME,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  registration__date DATETIME,
   text VARCHAR(128),
-  user_id INT,
-  task_id INT,
+  user_id INT UNSIGNED,
+  task_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (task_id) REFERENCES task(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE response (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  reg_date DATETIME,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  registration_date DATETIME,
   text VARCHAR(128),
-  user_id INT,
-  task_id INT,
+  user_id INT UNSIGNED,
+  task_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (task_id) REFERENCES task(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE chat (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  reg_date DATETIME,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  registration_date DATETIME,
   message VARCHAR(128),
-  sender_id INT,
-  recipient_id INT,
+  sender_id INT UNSIGNED,
+  recipient_id INT UNSIGNED,
   FOREIGN KEY (sender_id) REFERENCES user(id),
   FOREIGN KEY (recipient_id) REFERENCES user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE user_category (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT,
-  category_id INT,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED,
+  category_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (category_id) REFERENCES category(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
