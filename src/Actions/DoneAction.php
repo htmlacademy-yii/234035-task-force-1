@@ -1,20 +1,17 @@
 <?php
 
-namespace TaskForce;
+namespace TaskForce\Actions;
 
-class RefuseAction extends AbstractAction
+class DoneAction extends AbstractAction
 {
-    private $actionName = 'Отказаться';
-    private $actionInnerName = 'refuseAction';
-
     public function getActionName(): string
     {
-        return $this->actionName;
+        return 'Выполнено';
     }
 
     public function getActionInnerName(): string
     {
-        return $this->actionInnerName;
+        return 'doneAction';
     }
 
     public function checkAccessRights(int $customerID, int $executorID, int $userID): bool

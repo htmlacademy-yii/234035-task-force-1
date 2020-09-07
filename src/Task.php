@@ -2,12 +2,18 @@
 
 namespace TaskForce;
 
+use TaskForce\Actions\AbstractAction;
+use TaskForce\Actions\CancelAction;
+use TaskForce\Actions\DoneAction;
+use TaskForce\Actions\RefuseAction;
+use TaskForce\Actions\RespondAction;
+
 class Task
 {
-    public const STATUS_NEW = 'new status'; //новое
-    public const STATUS_WORK = 'work status'; //выполняется
-    public const STATUS_DONE = 'done status'; //завершено
-    public const STATUS_CANCEL = 'cancel status'; //отменено
+    public const STATUS_NEW = 'new status';
+    public const STATUS_WORK = 'work status';
+    public const STATUS_DONE = 'done status';
+    public const STATUS_CANCEL = 'cancel status';
 
     private const STATUSES = [
         self::STATUS_NEW,
@@ -24,10 +30,10 @@ class Task
         self::ROLE_EXECUTOR
     ];
 
-    public const ACTION_CANCEL = 'cancel action'; // отменить задание
-    public const ACTION_RESPOND = 'respond action'; //откликнуться на задание
-    public const ACTION_DONE = 'done action'; //задание выполнено
-    public const ACTION_REFUSE = 'refuse action'; //отказаться от задания
+    public const ACTION_CANCEL = 'cancel action';
+    public const ACTION_RESPOND = 'respond action';
+    public const ACTION_DONE = 'done action';
+    public const ACTION_REFUSE = 'refuse action';
 
     private const ACTIONS = [
         self::ACTION_CANCEL,
@@ -43,12 +49,12 @@ class Task
         self::ACTION_REFUSE => self::STATUS_WORK
     ];
 
-    private $customerID = null;
-    private $executorID = null;
-    private $completionDate = null;
-    private $activeStatus = null;
+    private ?int $customerID;
+    private ?int $executorID;
+    private ?string $completionDate;
+    private ?string $activeStatus;
 
-    public function __construct($customerID, $executorID, $userID)
+    public function __construct(int $customerID, int $executorID, int $userID)
     {
         $this->customerID = $customerID;
         $this->executorID = $executorID;
@@ -60,22 +66,27 @@ class Task
         $this->refuseAction = new RefuseAction();
     }
 
-    public function getActions(string $status): object
+    public function getActions(string $status): AbstractAction
     {
-        if ($status == 'new status') {
+        if ($status === self::STATUS_NEW)
+        {
             if ($this->cancelAction->checkAccessRights($this->customerID, $this->executorID, $this->userID))
                 $result = $this->cancelAction;
             else {
                 $result = $this->respondAction;
             }
         }
-
-        if ($status == 'work status') {
+        elseif ($status === self::STATUS_WORK)
+        {
             if ($this->doneAction->checkAccessRights($this->customerID, $this->executorID, $this->userID))
                 $result = $this->doneAction;
             else {
                 $result = $this->refuseAction;
             }
+        }
+        else
+        {
+            throw new \Exception('Status not found');
         }
 
         return $result;
