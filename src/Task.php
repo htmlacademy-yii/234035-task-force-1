@@ -7,6 +7,7 @@ use TaskForce\Actions\CancelAction;
 use TaskForce\Actions\DoneAction;
 use TaskForce\Actions\RefuseAction;
 use TaskForce\Actions\RespondAction;
+use TaskForce\Exceptions\TaskException;
 
 class Task
 {
@@ -56,6 +57,10 @@ class Task
 
     public function __construct(int $customerID, int $executorID, int $userID)
     {
+        if (empty($customerID) or empty($executorID) or empty($userID))
+        {
+            throw new TaskException('The role is empty');
+        }
         $this->customerID = $customerID;
         $this->executorID = $executorID;
         $this->userID = $userID;
@@ -86,7 +91,7 @@ class Task
         }
         else
         {
-            throw new \Exception('Status not found');
+            throw new TaskException('Status not found');
         }
 
         return $result;
