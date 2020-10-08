@@ -10,14 +10,13 @@ class CsvToSql
     {
         if (!file_exists($path)) {
             throw new TaskException('File not found');
-        } else {
-            $file = new SplFileObject($path);
-            while (!$file->eof())
-            {
-                $array[] = $file->fgetcsv();
-            }
-            array_pop($array);
         }
+        $file = new SplFileObject($path);
+        while (!$file->eof())
+        {
+            $array[] = $file->fgetcsv();
+        }
+        array_pop($array);
         return $array;
     }
 
@@ -49,7 +48,6 @@ class CsvToSql
         $filename = $info['dirname'].'/'.$info['filename'].'.sql';
         $fp = fopen($filename, 'w');
         $text = $this->getSql($table, $data);
-//        echo $text;
         fwrite($fp, $text);
         fclose($fp);
     }
