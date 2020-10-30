@@ -23,7 +23,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -54,7 +54,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function actions()
+    public function actions(): array
     {
         return [
             'error' => [
@@ -72,7 +72,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         return $this->render('index');
     }
@@ -82,7 +82,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
+    public function actionLogin(): string
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -105,7 +105,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
+    public function actionLogout(): string
     {
         Yii::$app->user->logout();
 
