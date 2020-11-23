@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "tasks".
@@ -158,5 +159,37 @@ class Tasks extends \yii\db\ActiveRecord
     public function getStatus()
     {
         return $this->hasOne(Statuses::className(), ['id' => 'status_id']);
+    }
+
+    public function getData()
+    {
+        $query = new Query();
+        $data = $query->select([
+            'tasks.id',
+            'tasks.name',
+            'tasks.description',
+            'tasks.budget',
+            'tasks.registration_date',
+            'tasks.execution_date',
+            'tasks.finish_date',
+            'cities.city as city',
+            'categories.name as category',
+            'categories.icon as icon',
+            'tasks.executor_id',
+            'tasks.customer_id',
+            'tasks.status_id'
+        ])
+            ->from('tasks')
+            ->join('INNER JOIN', 'cities', 'tasks.city_id = cities.id')
+            ->join('INNER JOIN','categories', 'tasks.category_id = categories.id')
+            ->join('INNER JOIN','statuses','tasks.status_id = statuses.id')
+            ->where(['statuses.name' => 'new'])
+            ->orderBy(['registration_date' => SORT_DESC])->all();
+
+        foreach ($data as &$task) {
+            $task['registration_date'] = date('H:i:s d.m.Y', strtotime($task['registration_date']));
+        }
+
+        return $data;
     }
 }
