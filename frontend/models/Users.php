@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "users".
@@ -173,5 +174,21 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersCategories()
     {
         return $this->hasMany(UsersCategories::className(), ['user_id' => 'id']);
+    }
+
+    public function getData()
+    {
+        $query = new Query();
+        $data = $query->select([
+            'users.id',
+            'users.registration_date',
+            'users.name',
+            'users.info',
+            'users.avatar',
+            'users.rate'
+        ])
+            ->from('users')
+            ->all();
+        return $data;
     }
 }
