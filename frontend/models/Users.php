@@ -176,7 +176,7 @@ class Users extends \yii\db\ActiveRecord
         return $this->hasMany(UsersCategories::className(), ['user_id' => 'id']);
     }
 
-    public function getData()
+    public function findAllUsers()
     {
         $query = new Query();
         $data = $query->select([

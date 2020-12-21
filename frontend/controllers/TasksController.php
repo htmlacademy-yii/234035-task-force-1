@@ -8,7 +8,7 @@ class TasksController extends Controller
 {
     public function actionIndex(): string
     {
-        $data = (new Tasks())->getData();
+        $data = (new Tasks())->findAllTasks();
         return $this->render('index', ['data' => $data]);
     }
 }

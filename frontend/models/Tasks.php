@@ -161,7 +161,7 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasOne(Statuses::className(), ['id' => 'status_id']);
     }
 
-    public function getData()
+    public function findAllTasks()
     {
         $query = new Query();
         $data = $query->select([

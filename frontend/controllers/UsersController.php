@@ -8,7 +8,7 @@ class UsersController extends Controller
 {
     public function actionIndex(): string
     {
-        $data = (new Users())->getData();
+        $data = (new Users())->findAllUsers();
         return $this->render('index', ['data' => $data]);
     }
 }
