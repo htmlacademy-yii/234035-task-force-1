@@ -176,19 +176,56 @@ class Users extends \yii\db\ActiveRecord
         return $this->hasMany(UsersCategories::className(), ['user_id' => 'id']);
     }
 
-    public function findAllUsers()
+    public function findAllUsers($filters)
     {
         $query = new Query();
-        $data = $query->select([
+        $data = $query->distinct()->select([
             'users.id',
             'users.registration_date',
+            'users.online',
             'users.name',
             'users.info',
             'users.avatar',
-            'users.rate'
+            'users.rate',
+            'favorites.f_user_id',
+            'COUNT(tasks.executor_id) as tasks_count',
+            'COUNT(opinions.user_id) as opinions_count'
         ])
             ->from('users')
+            ->join('INNER JOIN','categories', 'users.category_id = categories.id')
+            ->join('LEFT OUTER JOIN','tasks','users.id = tasks.executor_id')
+            ->join('LEFT OUTER JOIN','opinions','users.id = opinions.user_id')
+            ->join('LEFT OUTER JOIN','favorites','users.id = favorites.f_user_id')
+            ->groupBy(['users.id'])
             ->all();
+
+        if ($filters->categories) {
+            $query->where(['in', 'categories.id', $filters->categories]);
+        }
+
+        if ($filters->free_now) {
+            $query->andWhere(['tasks.executor_id' => null]);
+        }
+
+        if ($filters->online_now) {
+            $query->andWhere(['>=', 'users.online', date("Y-m-d H:i:s", strtotime("-30 minutes"))]);
+        }
+
+        if ($filters->is_opinions) {
+            $query->andWhere(['not',['opinions.user_id' => null]]);
+        }
+
+        if ($filters->in_favorites) {
+            $query->andWhere('users.id = favorites.f_user_id');
+//            $query->andWhere(['favorites.user_id' => 10]); // SESSION_ID ???
+        }
+
+        if ($filters->search != '') {
+            $query->andWhere(['LIKE', 'users.name', $filters->search]);
+        }
+
+        $data = $query->all();
+
         return $data;
     }
 }

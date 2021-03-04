@@ -9,6 +9,7 @@ SET FOREIGN_KEY_CHECKS=0;
 CREATE TABLE users (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   registration_date DATETIME NOT NULL,
+  online DATETIME,
   name VARCHAR(128) NOT NULL,
   email VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
@@ -109,4 +110,12 @@ CREATE TABLE users_categories (
   category_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (category_id) REFERENCES categories(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE favorites (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED,
+  f_user_id INT UNSIGNED,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (f_user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
