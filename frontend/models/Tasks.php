@@ -183,10 +183,10 @@ class Tasks extends \yii\db\ActiveRecord
             'tasks.status_id'
         ])
             ->from('tasks')
-            ->join('LEFT OUTER JOIN', 'cities', 'tasks.city_id = cities.id')
+            ->join('LEFT JOIN', 'cities', 'tasks.city_id = cities.id')
             ->join('INNER JOIN','categories', 'tasks.category_id = categories.id')
             ->join('INNER JOIN','statuses','tasks.status_id = statuses.id')
-            ->join('LEFT OUTER JOIN','replies','tasks.id = replies.task_id')
+            ->join('LEFT JOIN','replies','tasks.id = replies.task_id')
             ->where(['statuses.name' => 'new'])
             ->orderBy(['registration_date' => SORT_DESC])->all();
 
@@ -214,8 +214,8 @@ class Tasks extends \yii\db\ActiveRecord
                 break;
         }
 
-        if ($filters->search != '') {
-            $query->andWhere(['LIKE', 'tasks.name', $filters->search]);
+        if ($filters->search !== '') {
+            $query->andWhere(['LIKE', 'tasks.name', '%' . $filters->search . '%', false]);
         }
 
         $data = $query->all();

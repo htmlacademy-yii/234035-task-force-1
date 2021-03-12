@@ -193,9 +193,9 @@ class Users extends \yii\db\ActiveRecord
         ])
             ->from('users')
             ->join('INNER JOIN','categories', 'users.category_id = categories.id')
-            ->join('LEFT OUTER JOIN','tasks','users.id = tasks.executor_id')
-            ->join('LEFT OUTER JOIN','opinions','users.id = opinions.user_id')
-            ->join('LEFT OUTER JOIN','favorites','users.id = favorites.f_user_id')
+            ->join('LEFT JOIN','tasks','users.id = tasks.executor_id')
+            ->join('LEFT JOIN','opinions','users.id = opinions.user_id')
+            ->join('LEFT JOIN','favorites','users.id = favorites.f_user_id')
             ->groupBy(['users.id'])
             ->all();
 
@@ -220,8 +220,8 @@ class Users extends \yii\db\ActiveRecord
 //            $query->andWhere(['favorites.user_id' => 10]); // SESSION_ID ???
         }
 
-        if ($filters->search != '') {
-            $query->andWhere(['LIKE', 'users.name', $filters->search]);
+        if ($filters->search !== '') {
+            $query->andWhere(['LIKE', 'users.name', '%' . $filters->search . '%', false]);
         }
 
         $data = $query->all();
