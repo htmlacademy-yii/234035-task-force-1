@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "categories".
@@ -75,5 +76,18 @@ class Categories extends \yii\db\ActiveRecord
     public function getUsersCategories()
     {
         return $this->hasMany(UsersCategories::className(), ['category_id' => 'id']);
+    }
+
+    public function findAllCategories()
+    {
+        $query = new Query();
+        $data = $query->select([
+            'categories.id',
+            'categories.name',
+            'categories.icon'
+        ])
+            ->from('categories')->all();
+
+        return $data;
     }
 }

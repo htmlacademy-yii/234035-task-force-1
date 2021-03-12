@@ -35,6 +35,7 @@ class Tasks extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
     public static function tableName(): string
     {
         return 'tasks';
@@ -161,10 +162,10 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasOne(Statuses::className(), ['id' => 'status_id']);
     }
 
-    public function getData()
+    public function findAllTasks($filters)
     {
         $query = new Query();
-        $data = $query->select([
+        $query->select([
             'tasks.id',
             'tasks.name',
             'tasks.description',
@@ -172,7 +173,9 @@ class Tasks extends \yii\db\ActiveRecord
             'tasks.registration_date',
             'tasks.execution_date',
             'tasks.finish_date',
+            'cities.id',
             'cities.city as city',
+            'categories.id',
             'categories.name as category',
             'categories.icon as icon',
             'tasks.executor_id',
@@ -180,16 +183,46 @@ class Tasks extends \yii\db\ActiveRecord
             'tasks.status_id'
         ])
             ->from('tasks')
-            ->join('INNER JOIN', 'cities', 'tasks.city_id = cities.id')
+            ->join('LEFT JOIN', 'cities', 'tasks.city_id = cities.id')
             ->join('INNER JOIN','categories', 'tasks.category_id = categories.id')
             ->join('INNER JOIN','statuses','tasks.status_id = statuses.id')
+            ->join('LEFT JOIN','replies','tasks.id = replies.task_id')
             ->where(['statuses.name' => 'new'])
             ->orderBy(['registration_date' => SORT_DESC])->all();
+
+        if ($filters->categories) {
+            $query->where(['in', 'categories.id', $filters->categories]);
+        }
+
+        if ($filters->no_replies) {
+            $query->andWhere(['replies.task_id' => null]);
+        }
+
+        if ($filters->remote_work) {
+            $query->andWhere(['cities.id' => null]);
+        }
+
+        switch ($filters->period) {
+            case 'day':
+                $query->andWhere(['>=', 'tasks.registration_date', date("Y-m-d H:i:s", strtotime("-1 day"))]);
+                break;
+            case 'week':
+                $query->andWhere(['>=', 'tasks.registration_date', date("Y-m-d H:i:s", strtotime("-1 week"))]);
+                break;
+            case 'month':
+                $query->andWhere(['>=', 'tasks.registration_date', date("Y-m-d H:i:s", strtotime("-1 month"))]);
+                break;
+        }
+
+        if ($filters->search !== '') {
+            $query->andWhere(['LIKE', 'tasks.name', '%' . $filters->search . '%', false]);
+        }
+
+        $data = $query->all();
 
         foreach ($data as &$task) {
             $task['registration_date'] = date('H:i:s d.m.Y', strtotime($task['registration_date']));
         }
-
         return $data;
     }
 }
